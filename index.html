@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Velvitos — Speciality Coffee & Thickshake · Nagpur</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Syne:wght@600;700;800&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --navy:#0D1020;--navy2:#141933;--navy3:#1F2950;
+  --white:#FAFAFA;--cream:#F5F0E6;
+  --accent:#5C99D6;--gold:#C9963A;--mid:#9EA3B8;
+  --ink:#0D0E14;--line:rgba(255,255,255,.07);
+  --fb:'Inter',sans-serif;--fd:'Syne',sans-serif;
+}
+html{scroll-behavior:smooth;}
+body{background:var(--navy);color:var(--white);font-family:var(--fb);font-weight:300;overflow-x:hidden;cursor:none;}
+img{max-width:100%;display:block;}
+a{text-decoration:none;color:inherit;}
+
+/* CURSOR */
+#cur,#cur2{position:fixed;border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);}
+#cur{width:6px;height:6px;background:var(--white);top:0;left:0;transition:background .3s;}
+#cur2{width:28px;height:28px;border:1px solid rgba(255,255,255,.3);top:0;left:0;transition:left .1s,top .1s,width .35s,height .35s;}
+body.hov #cur2{width:52px;height:52px;border-color:var(--accent);}
+body.hov #cur{background:var(--accent);}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:500;padding:24px 60px;display:flex;align-items:center;justify-content:space-between;transition:all .5s;border-bottom:1px solid transparent;}
+nav.stuck{padding:14px 60px;background:rgba(13,16,32,.95);backdrop-filter:blur(20px);border-bottom-color:var(--line);}
+.logo{font-family:var(--fd);font-size:20px;font-weight:800;letter-spacing:-.01em;}
+.nl{display:flex;gap:36px;list-style:none;}
+.nl a{font-size:13px;color:var(--mid);transition:color .3s;}
+.nl a:hover,.nl a.on{color:var(--white);}
+.nav-cta{font-size:12px;font-weight:500;background:var(--accent);color:var(--white);padding:11px 26px;border-radius:100px;transition:background .3s,transform .2s;display:inline-block;}
+.nav-cta:hover{background:#4a88c5;transform:scale(1.03);}
+.nav-toggle{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:6px;}
+.nav-toggle span{width:22px;height:1.5px;background:var(--white);transition:transform .3s,opacity .3s;display:block;}
+.nav-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:490;opacity:0;pointer-events:none;transition:opacity .4s;}
+.nav-overlay.show{opacity:1;pointer-events:all;}
+
+/* ══ HERO ══ */
+#hero{min-height:100vh;position:relative;overflow:hidden;display:flex;align-items:center;}
+.hero-bg{position:absolute;inset:0;background:linear-gradient(135deg,var(--navy) 0%,var(--navy2) 55%,#0A1628 100%);}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(92,153,214,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(92,153,214,.05) 1px,transparent 1px);background-size:80px 80px;}
+.hero-orb{position:absolute;border-radius:50%;filter:blur(90px);pointer-events:none;}
+.orb1{width:700px;height:700px;background:radial-gradient(circle,rgba(92,153,214,.18),transparent 70%);top:-150px;right:-120px;animation:float1 10s ease-in-out infinite;}
+.orb2{width:500px;height:500px;background:radial-gradient(circle,rgba(201,150,58,.12),transparent 70%);bottom:-100px;left:-80px;animation:float1 13s ease-in-out infinite reverse;}
+@keyframes float1{0%,100%{transform:translateY(0)}50%{transform:translateY(-40px)}}
+
+.hero-content{position:relative;z-index:10;padding:120px 60px 80px;max-width:800px;}
+.h-eye{font-size:11px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);margin-bottom:22px;display:block;opacity:0;transform:translateY(14px);}
+.h-title{font-family:var(--fd);font-size:clamp(46px,7.5vw,96px);font-weight:800;line-height:.92;letter-spacing:-.03em;margin-bottom:30px;}
+.h-title .ln{display:block;overflow:hidden;}
+.h-title .ln span{display:block;opacity:0;transform:translateY(110%);}
+.h-sub{font-size:17px;line-height:1.8;color:var(--mid);max-width:460px;margin-bottom:44px;opacity:0;transform:translateY(16px);}
+.h-btns{display:flex;gap:14px;flex-wrap:wrap;opacity:0;transform:translateY(16px);}
+.btn-p{font-size:13px;font-weight:500;background:var(--accent);color:var(--white);padding:15px 38px;border-radius:100px;display:inline-block;transition:background .3s,transform .2s;}
+.btn-p:hover{background:#4a88c5;transform:scale(1.03);}
+.btn-s{font-size:13px;color:var(--white);border:1px solid rgba(255,255,255,.22);padding:15px 38px;border-radius:100px;display:inline-block;transition:border-color .3s,transform .2s;}
+.btn-s:hover{border-color:var(--white);transform:scale(1.03);}
+
+.hero-right{position:absolute;right:60px;top:50%;transform:translateY(-50%);z-index:10;text-align:center;opacity:0;}
+.hero-cup{width:340px;height:500px;background:var(--navy3);border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;overflow:hidden;border:1px solid var(--line);}
+.hero-cup::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(92,153,214,.08),transparent);}
+.cup-tagline{font-family:var(--fd);font-size:26px;font-weight:700;color:var(--white);text-align:center;line-height:1.3;padding:0 28px;z-index:1;}
+.cup-sub{font-size:12px;color:var(--accent);margin-top:12px;letter-spacing:.06em;z-index:1;}
+/* animated ring around cup card */
+.cup-ring{position:absolute;width:380px;height:380px;border:1px solid rgba(92,153,214,.15);border-radius:50%;animation:ringPulse 3s ease-in-out infinite;}
+.cup-ring2{animation-delay:-1.5s;width:420px;height:420px;border-color:rgba(92,153,214,.08);}
+@keyframes ringPulse{0%,100%{transform:scale(1);opacity:.8}50%{transform:scale(1.06);opacity:.3}}
+
+/* scroll hint */
+.sh{position:absolute;bottom:36px;left:60px;z-index:10;display:flex;align-items:center;gap:12px;opacity:0;}
+.sh p{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--mid);}
+.sh-arrow{width:32px;height:32px;border:1px solid rgba(255,255,255,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;animation:bob 2s ease-in-out infinite;}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}
+
+/* ══ STATS BAR ══ */
+#stats{background:var(--navy3);padding:32px 60px;display:flex;justify-content:space-around;align-items:center;border-top:1px solid var(--line);border-bottom:1px solid var(--line);overflow:hidden;}
+.st-item{text-align:center;}
+.st-n{font-family:var(--fd);font-size:38px;font-weight:700;color:var(--white);line-height:1;}
+.st-l{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--mid);margin-top:6px;}
+.st-div{width:1px;height:52px;background:var(--line);}
+
+/* ══ MENU SECTION ══ */
+#menu-sec{padding:140px 60px;background:var(--white);}
+.sec-row{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:72px;flex-wrap:wrap;gap:20px;}
+.eyebrow{font-size:11px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);margin-bottom:14px;display:block;}
+.h2{font-family:var(--fd);font-size:clamp(34px,4.5vw,58px);font-weight:700;line-height:.96;letter-spacing:-.025em;color:var(--navy);}
+.sec-link{font-size:14px;font-weight:500;color:var(--accent);border-bottom:1px solid rgba(92,153,214,.3);padding-bottom:2px;transition:border-color .3s;}
+.sec-link:hover{border-color:var(--accent);}
+
+/* menu cards */
+.menu-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(22,20,15,.08);border:1px solid rgba(22,20,15,.08);}
+.mc{background:var(--white);padding:44px 38px;cursor:pointer;position:relative;overflow:hidden;transition:background .4s;}
+.mc:hover{background:var(--cream);}
+.mc::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--accent);transform:scaleX(0);transform-origin:left;transition:transform .5s cubic-bezier(.16,1,.3,1);}
+.mc:hover::after{transform:scaleX(1);}
+.mc-tag{display:inline-block;font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;background:var(--navy);color:var(--white);padding:5px 12px;border-radius:100px;margin-bottom:18px;}
+.mc-img{width:100%;height:200px;object-fit:cover;border-radius:10px;margin-bottom:24px;filter:saturate(.75);transition:filter .5s,transform .6s;}
+.mc:hover .mc-img{filter:saturate(1);transform:scale(1.02);}
+.mc-ph{width:100%;height:200px;background:var(--navy3);border-radius:10px;margin-bottom:24px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;transition:transform .6s;}
+.mc:hover .mc-ph{transform:scale(1.02);}
+.mc-ph::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(92,153,214,.1),transparent);}
+.mc-ph span{font-size:12px;color:var(--mid);z-index:1;}
+.mc-name{font-family:var(--fd);font-size:22px;font-weight:700;color:var(--navy);margin-bottom:8px;letter-spacing:-.01em;}
+.mc-desc{font-size:13px;line-height:1.65;color:var(--mid);margin-bottom:20px;}
+.mc-price{font-family:var(--fd);font-size:20px;font-weight:700;color:var(--navy);}
+
+/* ══ STORY SECTION ══ */
+#story-sec{padding:140px 60px;background:var(--navy2);position:relative;overflow:hidden;}
+#story-sec::before{content:'';position:absolute;right:-200px;top:-200px;width:700px;height:700px;background:radial-gradient(circle,rgba(92,153,214,.07),transparent 70%);pointer-events:none;}
+.story-g{display:grid;grid-template-columns:1fr 1fr;gap:100px;align-items:center;max-width:1280px;margin:0 auto;}
+.story-img-ph{width:100%;aspect-ratio:4/5;background:var(--navy3);border-radius:14px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;border:1px solid var(--line);}
+.story-img-ph::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(92,153,214,.08),transparent);}
+.story-img-ph span{font-size:13px;color:var(--mid);z-index:1;}
+.story-h2{font-family:var(--fd);font-size:clamp(34px,4.5vw,56px);font-weight:700;line-height:.96;letter-spacing:-.025em;color:var(--white);}
+.story-body{font-size:16px;line-height:1.9;color:var(--mid);margin:24px 0;}
+.story-quote{font-family:var(--fd);font-size:20px;font-weight:600;color:var(--white);font-style:italic;padding:24px 28px;border-left:2px solid var(--accent);margin-top:32px;background:rgba(92,153,214,.06);border-radius:0 8px 8px 0;}
+.story-qby{font-size:12px;color:var(--accent);margin-top:10px;}
+
+/* ABOUT / STORY inside story section */
+.about-blocks{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);margin-top:80px;max-width:1280px;margin-left:auto;margin-right:auto;}
+.ab{background:var(--navy2);padding:44px 36px;position:relative;overflow:hidden;transition:background .4s;}
+.ab:hover{background:var(--navy3);}
+.ab-n{font-family:var(--fd);font-size:56px;font-weight:800;color:rgba(255,255,255,.04);margin-bottom:16px;line-height:1;}
+.ab-title{font-family:var(--fd);font-size:21px;font-weight:700;color:var(--white);margin-bottom:12px;}
+.ab-body{font-size:14px;line-height:1.8;color:var(--mid);}
+.ab::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--accent);transform:scaleX(0);transform-origin:left;transition:transform .5s cubic-bezier(.16,1,.3,1);}
+.ab:hover::after{transform:scaleX(1);}
+
+/* ══ NUMBERS DARK ══ */
+#numbers{padding:90px 60px;background:var(--navy);}
+.nums-g{display:grid;grid-template-columns:repeat(4,1fr);max-width:1280px;margin:0 auto;}
+.num-item{padding:0 40px;border-right:1px solid var(--line);text-align:center;}
+.num-item:last-child{border:none;}
+.num-n{font-family:var(--fd);font-size:56px;font-weight:700;color:var(--white);letter-spacing:-.03em;line-height:1;}
+.num-l{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--mid);margin-top:10px;}
+
+/* ══ REVIEWS ══ */
+#reviews{padding:140px 60px;background:var(--cream);}
+.rev-g{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(22,20,15,.08);border:1px solid rgba(22,20,15,.08);max-width:1280px;margin:72px auto 0;}
+.rv{background:var(--cream);padding:48px 40px;transition:background .3s;position:relative;overflow:hidden;}
+.rv:hover{background:var(--white);}
+.rv-stars{font-size:14px;color:var(--gold);letter-spacing:2px;margin-bottom:22px;}
+.rv-text{font-size:15px;line-height:1.8;color:var(--navy);font-style:italic;margin-bottom:28px;}
+.rv-name{font-size:13px;font-weight:600;color:var(--navy);}
+.rv-role{font-size:11px;color:var(--mid);margin-top:3px;}
+
+/* ══ MENU HORIZONTAL ══ */
+#menu-full{padding:140px 0;background:var(--navy);overflow:hidden;}
+.mf-head{padding:0 60px;margin-bottom:60px;}
+.mf-head .h2{color:var(--white);}
+.menu-scroll{display:flex;gap:2px;padding:0 60px;will-change:transform;}
+.mi-card{flex-shrink:0;width:300px;background:var(--navy2);border-radius:12px;padding:32px 28px;border:1px solid var(--line);transition:background .4s,transform .4s;cursor:pointer;}
+.mi-card:hover{background:var(--navy3);transform:translateY(-6px);}
+.mi-cat{font-size:9px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:16px;}
+.mi-ph{width:100%;height:160px;background:var(--navy3);border-radius:8px;margin-bottom:20px;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;}
+.mi-ph::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(92,153,214,.08),transparent);}
+.mi-ph span{font-size:11px;color:var(--mid);z-index:1;}
+.mi-name{font-family:var(--fd);font-size:18px;font-weight:700;color:var(--white);margin-bottom:8px;}
+.mi-desc{font-size:12px;line-height:1.6;color:var(--mid);margin-bottom:18px;}
+.mi-row{display:flex;justify-content:space-between;align-items:center;}
+.mi-price{font-family:var(--fd);font-size:17px;font-weight:700;color:var(--white);}
+.mi-veg{width:14px;height:14px;border-radius:50%;border:1px solid;}
+.mi-veg.v{background:rgba(50,180,80,.2);border-color:#32B450;}
+.mi-veg.nv{background:rgba(220,60,60,.2);border-color:#DC3C3C;}
+
+/* ══ FINAL CTA ══ */
+#cta-sec{padding:160px 60px;background:var(--navy2);text-align:center;position:relative;overflow:hidden;}
+#cta-sec::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(92,153,214,.12),transparent 65%);pointer-events:none;}
+.cta-h{font-family:var(--fd);font-size:clamp(40px,6vw,82px);font-weight:800;line-height:.95;letter-spacing:-.03em;color:var(--white);max-width:900px;margin:16px auto 32px;}
+.cta-sub{font-size:16px;color:var(--mid);margin-bottom:48px;}
+.cta-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+
+/* REVEAL ANIMATIONS */
+.r{opacity:0;transform:translateY(40px);transition:opacity .95s cubic-bezier(.16,1,.3,1),transform .95s cubic-bezier(.16,1,.3,1);}
+.r.on{opacity:1;transform:none;}
+.d1{transition-delay:.1s}.d2{transition-delay:.2s}.d3{transition-delay:.3s}.d4{transition-delay:.4s}.d5{transition-delay:.5s}
+
+/* WORD SPLIT */
+.split-w .word{display:inline-block;overflow:hidden;vertical-align:bottom;}
+.split-w .word span{display:inline-block;transform:translateY(105%);opacity:0;transition:transform .75s cubic-bezier(.16,1,.3,1),opacity .75s;}
+.split-w.on .word span{transform:translateY(0);opacity:1;}
+
+/* FOOTER */
+footer{background:#060810;padding:80px 60px 36px;}
+.ft{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:56px;margin-bottom:56px;}
+.fb-logo{font-family:var(--fd);font-size:22px;font-weight:800;color:var(--white);margin-bottom:14px;}
+.fb-tag{font-size:13px;line-height:1.7;color:rgba(255,255,255,.3);max-width:220px;}
+.fc-t{font-size:10px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:18px;}
+.fc-l{list-style:none;}
+.fc-l li{margin-bottom:12px;}
+.fc-l a{font-size:13px;color:rgba(255,255,255,.42);transition:color .3s;}
+.fc-l a:hover{color:var(--white);}
+.fb-bot{display:flex;justify-content:space-between;border-top:1px solid rgba(255,255,255,.06);padding-top:26px;font-size:11px;color:rgba(255,255,255,.2);flex-wrap:wrap;gap:8px;}
+
+/* ── CART BUTTON IN NAV ── */
+.cart-btn{background:none;border:1px solid rgba(255,255,255,.2);color:var(--white);width:44px;height:44px;border-radius:100px;cursor:pointer;display:flex;align-items:center;justify-content:center;position:relative;transition:border-color .3s,background .3s;}
+.cart-btn:hover{border-color:var(--accent);background:rgba(92,153,214,.1);}
+.cart-count{position:absolute;top:-6px;right:-6px;background:var(--accent);color:var(--white);font-size:10px;font-weight:700;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;opacity:0;transform:scale(0);transition:opacity .3s,transform .3s;}
+.cart-count.show{opacity:1;transform:scale(1);}
+
+/* ── CART DRAWER ── */
+#cart-drawer{
+  position:fixed;top:0;right:-440px;width:420px;height:100vh;
+  background:var(--navy2);z-index:800;
+  transition:right .45s cubic-bezier(.16,1,.3,1);
+  display:flex;flex-direction:column;
+  border-left:1px solid var(--line);
+  box-shadow:-20px 0 60px rgba(0,0,0,.4);
+}
+#cart-drawer.open{right:0;}
+.cart-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:790;opacity:0;pointer-events:none;transition:opacity .4s;}
+.cart-overlay.show{opacity:1;pointer-events:all;}
+.cart-head{padding:28px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;}
+.cart-head h3{font-family:var(--fd);font-size:20px;font-weight:700;color:var(--white);}
+.cart-close{background:none;border:none;color:var(--mid);cursor:pointer;font-size:22px;line-height:1;transition:color .3s;}
+.cart-close:hover{color:var(--white);}
+.cart-items{flex:1;overflow-y:auto;padding:20px 28px;}
+.cart-items::-webkit-scrollbar{width:4px;}
+.cart-items::-webkit-scrollbar-track{background:transparent;}
+.cart-items::-webkit-scrollbar-thumb{background:var(--navy3);border-radius:2px;}
+.cart-empty{text-align:center;padding:80px 20px;color:var(--mid);}
+.cart-empty svg{margin:0 auto 16px;opacity:.3;}
+.cart-empty p{font-size:14px;line-height:1.6;}
+.cart-item{display:flex;align-items:center;gap:16px;padding:18px 0;border-bottom:1px solid var(--line);}
+.cart-item:last-child{border:none;}
+.ci-img{width:56px;height:56px;background:var(--navy3);border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--mid);}
+.ci-info{flex:1;min-width:0;}
+.ci-name{font-size:14px;font-weight:500;color:var(--white);margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.ci-price{font-size:13px;color:var(--accent);}
+.ci-qty{display:flex;align-items:center;gap:10px;margin-top:8px;}
+.ci-btn{width:26px;height:26px;border-radius:50%;border:1px solid var(--line);background:none;color:var(--white);cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;transition:background .3s,border-color .3s;}
+.ci-btn:hover{background:var(--accent);border-color:var(--accent);}
+.ci-num{font-size:14px;font-weight:500;color:var(--white);min-width:20px;text-align:center;}
+.ci-del{background:none;border:none;color:rgba(255,255,255,.2);cursor:pointer;font-size:16px;transition:color .3s;padding:4px;}
+.ci-del:hover{color:#e05555;}
+.cart-footer{padding:24px 28px;border-top:1px solid var(--line);}
+.cart-total{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.ct-label{font-size:13px;color:var(--mid);}
+.ct-val{font-family:var(--fd);font-size:22px;font-weight:700;color:var(--white);}
+.cart-note{font-size:11px;color:var(--mid);margin-bottom:20px;}
+.cart-checkout{width:100%;padding:17px;background:var(--accent);border:none;color:var(--white);font-family:var(--fb);font-size:14px;font-weight:600;border-radius:100px;cursor:pointer;transition:background .3s,transform .2s;}
+.cart-checkout:hover{background:#4a88c5;transform:scale(1.02);}
+.cart-checkout:active{transform:scale(.98);}
+
+/* ADD button on cards */
+.add-btn{
+  display:flex;align-items:center;gap:8px;
+  font-size:12px;font-weight:500;
+  background:var(--navy);color:var(--white);
+  border:none;padding:10px 20px;border-radius:100px;cursor:pointer;
+  transition:background .3s,transform .2s;margin-top:16px;
+  font-family:var(--fb);
+}
+.add-btn:hover{background:var(--accent);transform:scale(1.03);}
+.add-btn svg{flex-shrink:0;}
+#menu-sec .mc .add-btn{background:var(--navy);}
+#menu-sec .mc .add-btn:hover{background:var(--accent);}
+
+/* ── ORDER SECTION ── */
+#order-section{padding:140px 60px;background:var(--navy);}
+.order-cats{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:60px;}
+.ocat{font-size:12px;font-weight:500;border:1px solid var(--line);color:var(--mid);background:none;padding:10px 22px;border-radius:100px;cursor:pointer;transition:all .3s;font-family:var(--fb);}
+.ocat:hover{border-color:var(--mid);color:var(--white);}
+.ocat.on{background:var(--accent);border-color:var(--accent);color:var(--white);}
+.order-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);}
+.oi{background:var(--navy);padding:32px 28px;transition:background .4s;position:relative;}
+.oi:hover{background:var(--navy2);}
+.oi.hidden{display:none;}
+.oi-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:10px;}
+.oi-name{font-family:var(--fd);font-size:17px;font-weight:700;color:var(--white);}
+.oi-veg{width:14px;height:14px;border-radius:50%;flex-shrink:0;margin-top:3px;}
+.oi-veg.v{background:rgba(50,180,80,.2);border:1px solid #32B450;}
+.oi-veg.nv{background:rgba(220,60,60,.2);border:1px solid #DC3C3C;}
+.oi-desc{font-size:13px;color:var(--mid);line-height:1.6;margin-bottom:20px;}
+.oi-foot{display:flex;align-items:center;justify-content:space-between;}
+.oi-price{font-family:var(--fd);font-size:18px;font-weight:700;color:var(--white);}
+
+/* ── CHECKOUT MODAL ── */
+#checkout-modal{position:fixed;inset:0;z-index:900;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .35s;}
+#checkout-modal.open{opacity:1;pointer-events:all;}
+.modal-bg{position:absolute;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(8px);}
+.modal-box{position:relative;z-index:1;background:var(--navy2);border-radius:20px;padding:48px;width:90%;max-width:520px;border:1px solid var(--line);transform:translateY(30px) scale(.96);transition:transform .4s cubic-bezier(.16,1,.3,1);}
+#checkout-modal.open .modal-box{transform:none;}
+.modal-box h3{font-family:var(--fd);font-size:26px;font-weight:700;color:var(--white);margin-bottom:8px;}
+.modal-box p{font-size:14px;color:var(--mid);margin-bottom:32px;}
+.modal-form{display:grid;gap:14px;}
+.mf-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.mfi{background:rgba(255,255,255,.05);border:1px solid var(--line);color:var(--white);font-family:var(--fb);font-size:13px;padding:14px 16px;border-radius:10px;outline:none;width:100%;transition:border-color .3s;}
+.mfi::placeholder{color:var(--mid);}
+.mfi:focus{border-color:var(--accent);}
+.mfi-full{grid-column:1/-1;}
+.modal-order-type{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:4px 0;}
+.ot-btn{background:rgba(255,255,255,.04);border:1px solid var(--line);color:var(--mid);font-family:var(--fb);font-size:13px;padding:14px;border-radius:10px;cursor:pointer;transition:all .3s;text-align:center;}
+.ot-btn.on{background:rgba(92,153,214,.15);border-color:var(--accent);color:var(--white);}
+.modal-submit{width:100%;padding:17px;background:var(--accent);border:none;color:var(--white);font-family:var(--fb);font-size:14px;font-weight:600;border-radius:100px;cursor:pointer;margin-top:8px;transition:background .3s,transform .2s;}
+.modal-submit:hover{background:#4a88c5;transform:scale(1.02);}
+.modal-close-btn{position:absolute;top:20px;right:20px;background:none;border:none;color:var(--mid);font-size:22px;cursor:pointer;transition:color .3s;}
+.modal-close-btn:hover{color:var(--white);}
+/* success */
+.modal-success{display:none;text-align:center;padding:20px 0;}
+.modal-success.show{display:block;}
+.success-icon{width:64px;height:64px;background:rgba(50,180,80,.15);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;}
+.modal-success h3{font-family:var(--fd);font-size:26px;font-weight:700;color:var(--white);margin-bottom:12px;}
+.modal-success p{font-size:15px;color:var(--mid);line-height:1.7;}
+
+/* floating cart bubble on mobile */
+.cart-fab{display:none;position:fixed;bottom:24px;right:24px;z-index:700;background:var(--accent);color:var(--white);border:none;width:60px;height:60px;border-radius:50%;cursor:pointer;box-shadow:0 8px 32px rgba(92,153,214,.4);align-items:center;justify-content:center;font-size:22px;}
+.cart-fab-count{position:absolute;top:-4px;right:-4px;background:var(--white);color:var(--navy);font-size:10px;font-weight:700;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;}
+
+@media(max-width:920px){
+  #order-section{padding:80px 24px;}
+  .order-grid{grid-template-columns:1fr;}
+  .mf-row{grid-template-columns:1fr;}
+  .modal-box{padding:32px 24px;}
+  .cart-fab{display:flex;}
+  #cart-drawer{width:100%;right:-100%;}
+}
+@media(max-width:920px){
+  nav{padding:16px 24px;}
+  nav.stuck{padding:12px 24px;}
+  .nl{position:fixed;top:0;right:-100%;bottom:0;width:75%;max-width:300px;background:var(--navy2);flex-direction:column;justify-content:center;gap:28px;padding:40px;z-index:600;transition:right .45s cubic-bezier(.16,1,.3,1);}
+  .nl.open{right:0;}
+  .nl a{font-size:18px;}
+  .nav-toggle{display:flex;}
+  .hero-right{display:none;}
+  .hero-content{padding:100px 24px 60px;}
+  #stats{flex-wrap:wrap;gap:20px;padding:28px 24px;}
+  .st-div{display:none;}
+  #menu-sec,#story-sec,#reviews,#numbers,#cta-sec{padding:80px 24px;}
+  .menu-cards,.rev-g{grid-template-columns:1fr;}
+  .story-g{grid-template-columns:1fr;gap:48px;}
+  .about-blocks{grid-template-columns:1fr;}
+  .nums-g{grid-template-columns:1fr 1fr;}
+  .num-item{border-bottom:1px solid var(--line);border-right:none;padding:20px 0;}
+  .ft{grid-template-columns:1fr 1fr;}
+  .mf-head{padding:0 24px;}
+  .sec-row{flex-direction:column;align-items:flex-start;}
+}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;}}
+</style>
+</head>
+<body>
+<div id="cur"></div>
+<div id="cur2"></div>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#" class="logo">VELVITOS</a>
+  <button class="nav-toggle" id="navToggle" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+  <ul class="nl" id="navLinks">
+    <li><a href="#" class="on">Home</a></li>
+    <li><a href="#menu-sec">Menu</a></li>
+    <li><a href="#story-sec">Story</a></li>
+    <li><a href="#cta-sec">Visit</a></li>
+  </ul>
+  <div style="display:flex;align-items:center;gap:12px;">
+    <button class="cart-btn" id="cartBtn" onclick="toggleCart()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 001.98 1.61h9.72a2 2 0 001.98-1.61L23 6H6"/></svg>
+      <span class="cart-count" id="cartCount">0</span>
+    </button>
+    <a href="#order-section" class="nav-cta">Order Now</a>
+  </div>
+</nav>
+<div class="nav-overlay" id="navOverlay"></div>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-orb orb1"></div>
+  <div class="hero-orb orb2"></div>
+  <div class="hero-content">
+    <span class="h-eye" id="hEye">Speciality Coffee & Thickshake · Chaoni, Nagpur · Open 24 Hours</span>
+    <h1 class="h-title">
+      <span class="ln"><span id="hl1">Where every</span></span>
+      <span class="ln"><span id="hl2">sip feels like</span></span>
+      <span class="ln"><span id="hl3">a gentle pause.</span></span>
+    </h1>
+    <p class="h-sub" id="hSub">We built Velvitos because we believed great coffee and honest thickshakes should be available to everyone — at any hour, any day.</p>
+    <div class="h-btns" id="hBtns">
+      <a href="#menu-sec" class="btn-p">Explore Menu</a>
+      <a href="#story-sec" class="btn-s">Our Story</a>
+    </div>
+  </div>
+  <div class="hero-right" id="heroRight">
+    <div class="cup-ring"></div>
+    <div class="cup-ring cup-ring2"></div>
+    <div class="hero-cup">
+      <div class="cup-tagline">"One Sip Closer<br/>To Your Dreams"</div>
+      <div class="cup-sub">— Velvitos Brand Promise</div>
+    </div>
+  </div>
+  <div class="sh" id="sh">
+    <p>Scroll</p>
+    <div class="sh-arrow">
+      <svg width="10" height="10" viewBox="0 0 10 10"><path d="M5 1v8M1 5l4 4 4-4" stroke="#9EA3B8" stroke-width="1.2" fill="none" stroke-linecap="round"/></svg>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div id="stats">
+  <div class="st-item r"><div class="st-n" data-count="4.8" data-dec="1">0</div><div class="st-l">Google Rating</div></div>
+  <div class="st-div"></div>
+  <div class="st-item r d1"><div class="st-n" data-count="40" data-sfx="+">0</div><div class="st-l">Happy Reviews</div></div>
+  <div class="st-div"></div>
+  <div class="st-item r d2"><div class="st-n">24H</div><div class="st-l">Always Open</div></div>
+  <div class="st-div"></div>
+  <div class="st-item r d3"><div class="st-n" data-count="60" data-sfx="+">0</div><div class="st-l">Menu Items</div></div>
+  <div class="st-div"></div>
+  <div class="st-item r d4"><div class="st-n">₹200</div><div class="st-l">Starting From</div></div>
+</div>
+
+<!-- MENU SECTION -->
+<section id="menu-sec">
+  <div class="sec-row">
+    <div class="r">
+      <span class="eyebrow">A Glimpse</span>
+      <h2 class="h2 split-w">Three reasons<br/>to come back.</h2>
+    </div>
+    <a href="#menu-full" class="sec-link r d2">View Full Menu →</a>
+  </div>
+  <div class="menu-cards">
+    <div class="mc r d1">
+      <span class="mc-tag">Bestseller</span>
+      <div class="mc-ph"><span>[ Brownie Shake Photo ]</span></div>
+      <div class="mc-name">Brownie Loaded Shake</div>
+      <p class="mc-desc">Bold coffee blended with rich fudgy brownie chunks. A legend at ₹109.</p>
+      <div class="mc-price">₹109</div>
+    </div>
+    <div class="mc r d2">
+      <span class="mc-tag">Must Try</span>
+      <div class="mc-ph"><span>[ Sandwich Photo ]</span></div>
+      <div class="mc-name">Corn & Cheese Melt</div>
+      <p class="mc-desc">Classic corn, house spices, garlic aioli on fresh focaccia bread.</p>
+      <div class="mc-price">₹320</div>
+    </div>
+    <div class="mc r d3">
+      <span class="mc-tag">Crowd Favourite</span>
+      <div class="mc-ph"><span>[ Platter Photo ]</span></div>
+      <div class="mc-name">Velvitos Breakfast Platter</div>
+      <p class="mc-desc">Chicken sausages, mushroom, focaccia, baked beans, Turkish eggs.</p>
+      <div class="mc-price">₹400</div>
+    </div>
+  </div>
+</section>
+
+<!-- STORY SECTION -->
+<section id="story-sec">
+  <div class="story-g">
+    <div class="story-img-ph r"><span>[ Cafe Interior Photo ]</span></div>
+    <div>
+      <span class="eyebrow r">In Every Sip Lives A Dream</span>
+      <h2 class="story-h2 r d1 split-w">We built this for<br/>the 1AM version<br/>of all of us.</h2>
+      <p class="story-body r d2">Velvitos started with a simple belief — that great coffee and honest thickshakes should be available to everyone, at any hour. Our founder Rahul Deshmukh spent three months perfecting the brownie thickshake recipes before a single one was served to a customer. 47 batches. Only 3 made the menu.</p>
+      <p class="story-body r d3">We opened in March 2022 with twelve seats and a handwritten menu. The doors opened at 7AM and didn't close that night. They still haven't. Three years later, the menu has grown to 60+ items, but the promise hasn't changed.</p>
+      <div class="story-quote r d4">
+        "The coffee is rich and flavorful, and the menu has a great variety of drinks and snacks to choose from."
+        <div class="story-qby">— Google Reviewer, Velvitos Customer</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- About description blocks -->
+  <div class="about-blocks" style="margin-top:80px;">
+    <div class="ab r d1">
+      <div class="ab-n">01</div>
+      <div class="ab-title">Never Close</div>
+      <p class="ab-body">Sleep is for the competition. Velvitos is open every hour of every day. A craving doesn't ask permission — and neither do we. 24 hours. 7 days. Always yours.</p>
+    </div>
+    <div class="ab r d2">
+      <div class="ab-n">02</div>
+      <div class="ab-title">Never Compromise</div>
+      <p class="ab-body">Every brownie is baked fresh. Every thickshake is blended to order. No shortcuts, no reheating, no packet mixes. If it isn't good enough for Rahul, it doesn't reach your table.</p>
+    </div>
+    <div class="ab r d3">
+      <div class="ab-n">03</div>
+      <div class="ab-title">Never Overcharge</div>
+      <p class="ab-body">A thickshake at ₹99. A full breakfast platter at ₹400. Premium doesn't have to mean expensive. We price for the person who comes every day, not just for the occasion.</p>
+    </div>
+  </div>
+</section>
+
+<!-- NUMBERS -->
+<section id="numbers">
+  <div class="nums-g">
+    <div class="num-item r"><div class="num-n" data-count="4.8" data-dec="1">0</div><div class="num-l">Google Rating</div></div>
+    <div class="num-item r d1"><div class="num-n" data-count="40" data-sfx="+">0</div><div class="num-l">Reviews</div></div>
+    <div class="num-item r d2"><div class="num-n" data-count="60" data-sfx="+">0</div><div class="num-l">Menu Items</div></div>
+    <div class="num-item r d3"><div class="num-n">24H</div><div class="num-l">Open Always</div></div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section id="reviews">
+  <div class="sec-row r">
+    <div>
+      <span class="eyebrow" style="color:var(--accent)">What They Say</span>
+      <h2 class="h2 split-w">4.8 stars.<br/>40 honest reviews.</h2>
+    </div>
+  </div>
+  <div class="rev-g">
+    <div class="rv r d1">
+      <div class="rv-stars">★★★★★</div>
+      <p class="rv-text">"Great coffee and amazing thickshakes! Loved the taste and quality. Definitely a place worth visiting again and again."</p>
+      <div class="rv-name">Google Reviewer</div><div class="rv-role">Verified Review</div>
+    </div>
+    <div class="rv r d2">
+      <div class="rv-stars">★★★★★</div>
+      <p class="rv-text">"The coffee is rich and flavorful, and the menu has a great variety of drinks and snacks to choose from."</p>
+      <div class="rv-name">Google Reviewer</div><div class="rv-role">Verified Review</div>
+    </div>
+    <div class="rv r d3">
+      <div class="rv-stars">★★★★★</div>
+      <p class="rv-text">"One sip and you understand why this place is always busy. The brownie shake is absolutely unreal."</p>
+      <div class="rv-name">Google Reviewer</div><div class="rv-role">Verified Review</div>
+    </div>
+  </div>
+</section>
+
+<!-- FULL MENU HORIZONTAL SCROLL -->
+<section id="menu-full">
+  <div class="mf-head r">
+    <span class="eyebrow">The Full Menu</span>
+    <h2 class="h2" style="color:var(--white);">Every item.<br/>Every price.</h2>
+  </div>
+  <div class="menu-scroll" id="menuScroll">
+    <div class="mi-card r d1"><div class="mi-cat">Sandwiches</div><div class="mi-ph"><span>Photo</span></div><div class="mi-name">Chicken Basil Sandwich</div><p class="mi-desc">Herb chicken, basil aioli, green leaf on focaccia</p><div class="mi-row"><div class="mi-price">₹350</div><div class="mi-veg nv"></div></div></div>
+    <div class="mi-card r d2"><div class="mi-cat">Sandwiches</div><div class="mi-ph"><span>Photo</span></div><div class="mi-name">Corn & Cheese Melt</div><p class="mi-desc">Classic corn, house spices, garlic aioli</p><div class="mi-row"><div class="mi-price">₹320</div><div class="mi-veg v"></div></div></div>
+    <div class="mi-card r d3"><div class="mi-cat">Breakfast</div><div class="mi-ph"><span>Photo</span></div><div class="mi-name">Velvitos Platter</div><p class="mi-desc">Sausages, mushroom, focaccia, baked beans, Turkish eggs</p><div class="mi-row"><div class="mi-price">₹400</div><div class="mi-veg nv"></div></div></div>
+    <div class="mi-card r d1"><div class="mi-cat">Thickshakes</div><div class="mi-ph"><span>Photo</span></div><div class="mi-name">Brownie Loaded</div><p class="mi-desc">Coffee + fudgy brownie chunks blended</p><div class="mi-row"><div class="mi-price">₹109</div><div class="mi-veg v"></div></div></div>
+    <div class="mi-card r d2"><div class="mi-cat">Thickshakes</div><div class="mi-ph"><span>Photo</span></div><div class="mi-name">Brownie Lava</div><p class="mi-desc">Inspired by molten brownie lava cake</p><div class="mi-row"><div class="mi-price">₹149</div><div class="mi-veg v"></div></div></div>
+    <div class="mi-card r d3"><div class="mi-cat">Fries</div><div class="mi-ph"><span>Photo</span></div><div class="mi-name">Truffle Fries</div><p class="mi-desc">Aromatic truffle oil and fresh herbs</p><div class="mi-row"><div class="mi-price">₹290</div><div class="mi-veg v"></div></div></div>
+    <div class="mi-card r d1"><div class="mi-cat">Fries</div><div class="mi-ph"><span>Photo</span></div><div class="mi-name">Peri Peri Fries</div><p class="mi-desc">Spicy peri peri seasoning, crispy golden</p><div class="mi-row"><div class="mi-price">₹200</div><div class="mi-veg v"></div></div></div>
+    <div class="mi-card r d2"><div class="mi-cat">Eggs</div><div class="mi-ph"><span>Photo</span></div><div class="mi-name">Shakshuka</div><p class="mi-desc">Eggs poached in spiced tomato sauce</p><div class="mi-row"><div class="mi-price">₹320</div><div class="mi-veg v"></div></div></div>
+    <div class="mi-card r d3"><div class="mi-cat">Eggs</div><div class="mi-ph"><span>Photo</span></div><div class="mi-name">Cheese Omelette</div><p class="mi-desc">Melted cheese fold, served with bread</p><div class="mi-row"><div class="mi-price">₹250</div><div class="mi-veg v"></div></div></div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section id="cta-sec">
+  <span class="eyebrow r">Come Find Us</span>
+  <h2 class="cta-h r d1 split-w">Open 24 Hours.<br/>Always a seat<br/>for you.</h2>
+  <p class="cta-sub r d2">Mahesh Arcade, Opposite Police Talav, Chaoni, Nagpur · ₹200–400</p>
+  <div class="cta-btns r d3">
+    <a href="https://maps.app.goo.gl/v3x239YbgTp5ojc97" target="_blank" class="btn-p">Get Directions</a>
+    <a href="#menu-sec" class="btn-s">View Menu</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="ft">
+    <div class="r">
+      <div class="fb-logo">VELVITOS</div>
+      <p class="fb-tag">Speciality in Coffee & Thickshake. Open 24 hours. Chaoni, Nagpur.</p>
+    </div>
+    <div class="r d1">
+      <div class="fc-t">Explore</div>
+      <ul class="fc-l">
+        <li><a href="#">Home</a></li>
+        <li><a href="#menu-sec">Menu</a></li>
+        <li><a href="#story-sec">Our Story</a></li>
+        <li><a href="#cta-sec">Visit Us</a></li>
+      </ul>
+    </div>
+    <div class="r d2">
+      <div class="fc-t">Menu</div>
+      <ul class="fc-l">
+        <li><a href="#">Hot Coffee</a></li>
+        <li><a href="#">Thickshakes</a></li>
+        <li><a href="#">Sandwiches</a></li>
+        <li><a href="#">Breakfast</a></li>
+      </ul>
+    </div>
+    <div class="r d3">
+      <div class="fc-t">Connect</div>
+      <ul class="fc-l">
+        <li><a href="#">@velvitos_co</a></li>
+        <li><a href="#">Google Reviews</a></li>
+        <li><a href="#">Zomato</a></li>
+        <li><a href="https://maps.app.goo.gl/v3x239YbgTp5ojc97" target="_blank">Get Directions</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="fb-bot">
+    <span>© 2024 Velvitos. All rights reserved.</span>
+    <span>Mahesh Arcade, Chaoni, Nagpur · Open 24 Hours</span>
+  </div>
+</footer>
+
+<script>
+gsap.registerPlugin(ScrollTrigger);
+
+/* ── CURSOR ── */
+const cur=document.getElementById('cur'),cur2=document.getElementById('cur2');
+document.addEventListener('mousemove',e=>{
+  cur.style.left=e.clientX+'px';cur.style.top=e.clientY+'px';
+  cur2.style.left=e.clientX+'px';cur2.style.top=e.clientY+'px';
+});
+document.querySelectorAll('a,button,.mc,.rv,.mi-card,.ab').forEach(el=>{
+  el.addEventListener('mouseenter',()=>document.body.classList.add('hov'));
+  el.addEventListener('mouseleave',()=>document.body.classList.remove('hov'));
+});
+
+/* ── NAV ── */
+const nav=document.getElementById('nav');
+window.addEventListener('scroll',()=>nav.classList.toggle('stuck',scrollY>50));
+
+/* ── MOBILE NAV ── */
+const tog=document.getElementById('navToggle'),nl=document.getElementById('navLinks'),ov=document.getElementById('navOverlay');
+tog.addEventListener('click',()=>{tog.classList.toggle('open');nl.classList.toggle('open');ov.classList.toggle('show');});
+ov.addEventListener('click',()=>{tog.classList.remove('open');nl.classList.remove('open');ov.classList.remove('show');});
+
+/* ── HERO ENTRANCE ANIMATIONS ── */
+const tl=gsap.timeline({defaults:{ease:'power3.out'}});
+tl.to('#hEye',{opacity:1,y:0,duration:.7,delay:.4})
+  .to('#hl1',{opacity:1,y:0,duration:.85,ease:'cubic-bezier(.16,1,.3,1)'},'-=.3')
+  .to('#hl2',{opacity:1,y:0,duration:.85,ease:'cubic-bezier(.16,1,.3,1)'},'-=.65')
+  .to('#hl3',{opacity:1,y:0,duration:.85,ease:'cubic-bezier(.16,1,.3,1)'},'-=.65')
+  .to('#hSub',{opacity:1,y:0,duration:.8},'-=.5')
+  .to('#hBtns',{opacity:1,y:0,duration:.7},'-=.4')
+  .to('#heroRight',{opacity:1,duration:.9,ease:'power2.out'},'-=.6')
+  .to('#sh',{opacity:1,duration:.6},'-=.2');
+
+/* ── HERO GRID PARALLAX ── */
+gsap.to('.hero-grid',{
+  backgroundPositionY:'80px',
+  ease:'none',
+  scrollTrigger:{trigger:'#hero',start:'top top',end:'bottom top',scrub:1}
+});
+
+/* ── HERO CUP FLOAT ── */
+gsap.to('.hero-cup',{
+  y:-20,duration:3,repeat:-1,yoyo:true,ease:'sine.inOut'
+});
+
+/* ── STATS COUNTER SLIDE IN ── */
+gsap.from('#stats',{
+  y:60,opacity:0,duration:1,ease:'power3.out',
+  scrollTrigger:{trigger:'#stats',start:'top 85%'}
+});
+
+/* ── MENU CARDS STAGGER ── */
+gsap.from('.mc',{
+  y:80,opacity:0,duration:.9,stagger:.12,ease:'power3.out',
+  scrollTrigger:{trigger:'.menu-cards',start:'top 75%'}
+});
+
+/* ── STORY IMAGE REVEAL ── */
+gsap.from('.story-img-ph',{
+  x:-80,opacity:0,duration:1.2,ease:'power3.out',
+  scrollTrigger:{trigger:'#story-sec',start:'top 70%'}
+});
+
+/* ── ABOUT BLOCKS ── */
+gsap.from('.ab',{
+  y:60,opacity:0,duration:.85,stagger:.15,ease:'power3.out',
+  scrollTrigger:{trigger:'.about-blocks',start:'top 78%'}
+});
+
+/* ── NUMBERS COUNT UP ── */
+document.querySelectorAll('[data-count]').forEach(el=>{
+  const target=parseFloat(el.dataset.count);
+  const dec=el.dataset.dec?parseInt(el.dataset.dec):0;
+  const sfx=el.dataset.sfx||'';
+  ScrollTrigger.create({
+    trigger:el,start:'top 85%',
+    onEnter:()=>{
+      let v=0,dur=2000,step=16,inc=target/(dur/step);
+      const t=setInterval(()=>{
+        v=Math.min(v+inc,target);
+        el.textContent=(dec?v.toFixed(dec):Math.floor(v))+sfx;
+        if(v>=target)clearInterval(t);
+      },step);
+    },once:true
+  });
+});
+
+/* ── REVIEW CARDS ── */
+gsap.from('.rv',{
+  y:50,opacity:0,duration:.85,stagger:.12,ease:'power3.out',
+  scrollTrigger:{trigger:'.rev-g',start:'top 78%'}
+});
+
+/* ── HORIZONTAL MENU SCROLL (GSAP PIN) ── */
+const ms=document.getElementById('menuScroll');
+if(ms){
+  gsap.to(ms,{
+    x:()=>-(ms.scrollWidth-window.innerWidth+120),
+    ease:'none',
+    scrollTrigger:{
+      trigger:'#menu-full',
+      start:'top top',
+      end:()=>'+='+(ms.scrollWidth-window.innerWidth+400),
+      scrub:1.2,
+      pin:true,
+    }
+  });
+}
+
+/* ── CTA SECTION SCALE IN ── */
+gsap.from('#cta-sec .cta-h',{
+  scale:.92,opacity:0,duration:1.1,ease:'power3.out',
+  scrollTrigger:{trigger:'#cta-sec',start:'top 75%'}
+});
+
+/* ── WORD SPLIT REVEALS ── */
+document.querySelectorAll('.split-w').forEach(el=>{
+  const html=el.innerHTML;
+  const words=html.split(/(\s+)/);
+  el.innerHTML=words.map(w=>w.trim()?`<span class="word"><span>${w}</span></span>`:w).join('');
+});
+const splitIO=new IntersectionObserver(entries=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){
+      const spans=entry.target.querySelectorAll('.word span');
+      spans.forEach((s,i)=>setTimeout(()=>{
+        s.style.transform='translateY(0)';
+        s.style.opacity='1';
+      },i*55));
+      splitIO.unobserve(entry.target);
+    }
+  });
+},{threshold:.3});
+document.querySelectorAll('.split-w').forEach(el=>splitIO.observe(el));
+
+/* ── SCROLL REVEAL ── */
+const io=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target);}});
+},{threshold:.08,rootMargin:'0px 0px -30px 0px'});
+document.querySelectorAll('.r').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>
